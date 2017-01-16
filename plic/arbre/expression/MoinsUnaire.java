@@ -17,4 +17,9 @@ public class MoinsUnaire extends Unaire {
         return "- " ;
     }
 
+	@Override
+	public void verifier() {
+		
+	}
+
 }

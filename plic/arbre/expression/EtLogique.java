@@ -17,4 +17,9 @@ public class EtLogique extends BinaireLogique {
         return " et " ;
     }
 
+	@Override
+	public void verifier() {
+		
+	}
+
 }

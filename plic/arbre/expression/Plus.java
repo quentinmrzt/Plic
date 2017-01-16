@@ -17,4 +17,9 @@ public class Plus extends BinaireArithmetique {
         return " + " ;
     }
 
+	@Override
+	public void verifier() {
+		
+	}
+
 }

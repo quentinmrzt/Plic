@@ -16,5 +16,10 @@ public class Egal extends Comparaison {
     public String operateur() {
         return " == ";
     }
+
+	@Override
+	public void verifier() {
+		
+	}
     
 }
