@@ -17,4 +17,9 @@ public class ConstanteEntiere extends Constante {
 		
 	}
 
+	@Override
+	public String getType() {
+		return "integer";
+	}
+
 }

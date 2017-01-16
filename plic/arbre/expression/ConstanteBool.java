@@ -16,5 +16,10 @@ public class ConstanteBool extends Constante {
 	public void verifier() {
 		
 	}
+	
+	@Override
+	public String getType() {
+		return "boolean";
+	}
 
 }

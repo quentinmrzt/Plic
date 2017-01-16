@@ -22,4 +22,9 @@ public class MoinsUnaire extends Unaire {
 		
 	}
 
+	@Override
+	public String getType() {
+		return "integer";
+	}
+
 }

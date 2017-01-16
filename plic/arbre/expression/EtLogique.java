@@ -22,4 +22,9 @@ public class EtLogique extends BinaireLogique {
 		
 	}
 
+	@Override
+	public String getType() {
+		return "boolean";
+	}
+
 }
