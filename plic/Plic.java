@@ -22,10 +22,10 @@ public class Plic {
             AnalyseurSyntaxique analyseur = new AnalyseurSyntaxique(new AnalyseurLexical(new FileReader(fichier)));
             ArbreAbstrait arbre = (ArbreAbstrait) analyseur.parse().value;
             
-            arbre.verifier();
-            
+            arbre.verifier();            
             System.err.println("expression stockée dans l'arbre : " + arbre);
             
+            System.out.println("\n" + arbre.toMIPS());
         } 
         catch (FileNotFoundException ex) {
             System.err.println("Fichier " + fichier + " inexistant") ;

@@ -27,5 +27,20 @@ public class Superieur extends Comparaison {
 			throw new AnalyseSemantiqueException(gauche.getNoLigne(), "deux expressions entières sont attendues");
 		}
 	}
+	
+	@Override
+	public String toMIPS() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("\t# Supérieur :\n");
+		sb.append(gauche.toMIPS());
+		sb.append("sw $v0, 0($sp)\n");
+		sb.append("add $sp, $sp, -4\n");
+		sb.append(droite.toMIPS());
+		sb.append("add $sp, $sp, 4\n");
+		sb.append("lw $t8, ($sp)\n");
+		sb.append("sgt $v0, $t8, $v0\n");
+		
+		return sb.toString();
+	}
     
 }

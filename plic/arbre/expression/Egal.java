@@ -17,4 +17,19 @@ public class Egal extends Comparaison {
         return " == ";
     }
     
+	@Override
+	public String toMIPS() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("\t# Egal :\n");
+		sb.append(gauche.toMIPS());
+		sb.append("sw $v0, 0($sp)\n");
+		sb.append("add $sp, $sp, -4\n");
+		sb.append(droite.toMIPS());
+		sb.append("add $sp, $sp, 4\n");
+		sb.append("lw $t8, ($sp)\n");
+		sb.append("seq $v0, $t8, $v0\n");
+		
+		return sb.toString();
+	}
+    
 }
