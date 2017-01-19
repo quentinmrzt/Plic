@@ -13,11 +13,6 @@ public class ConstanteEntiere extends Constante {
     }
 
 	@Override
-	public void verifier() {
-		
-	}
-
-	@Override
 	public String getType() {
 		return "integer";
 	}

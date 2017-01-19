@@ -1,5 +1,7 @@
 package plic.arbre.expression;
 
+import plic.exceptions.AnalyseSemantiqueException;
+
 /**
  * 3 déc. 2015
  *
@@ -18,13 +20,16 @@ public class MoinsUnaire extends Unaire {
     }
 
 	@Override
-	public void verifier() {
-		
-	}
-
-	@Override
 	public String getType() {
 		return "integer";
 	}
 
+	@Override
+	public void verifier() {
+		expression.verifier();
+		if(expression.getType()!="integer"){
+			throw new AnalyseSemantiqueException(expression.getNoLigne(), "une expression entière est attendue");
+		}
+	}
+	
 }

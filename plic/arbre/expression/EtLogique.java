@@ -18,11 +18,6 @@ public class EtLogique extends BinaireLogique {
     }
 
 	@Override
-	public void verifier() {
-		
-	}
-
-	@Override
 	public String getType() {
 		return "boolean";
 	}

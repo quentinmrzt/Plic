@@ -11,11 +11,6 @@ public class ConstanteBool extends Constante {
     public ConstanteBool(String texte, int n) {
         super(texte, n) ;
     }
-
-	@Override
-	public void verifier() {
-		
-	}
 	
 	@Override
 	public String getType() {

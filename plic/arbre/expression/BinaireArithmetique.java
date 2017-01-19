@@ -1,5 +1,7 @@
 package plic.arbre.expression;
 
+import plic.exceptions.AnalyseSemantiqueException;
+
 /**
  * 3 déc. 2015
  *
@@ -12,4 +14,17 @@ public abstract class BinaireArithmetique extends Binaire {
         super(gauche, droite) ;
     }
     
+	public String getType() {
+		return "integer";
+	}
+	
+	@Override
+	public void verifier() {
+		gauche.verifier();
+		droite.verifier();
+		if(gauche.getType()!="integer" || droite.getType()!="integer"){
+			throw new AnalyseSemantiqueException(gauche.getNoLigne(), "deux expressions entières sont attendues");
+		}
+	}
+	
 }

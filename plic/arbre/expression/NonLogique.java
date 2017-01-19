@@ -1,5 +1,7 @@
 package plic.arbre.expression;
 
+import plic.exceptions.AnalyseSemantiqueException;
+
 /**
  * 3 déc. 2015
  *
@@ -18,8 +20,16 @@ public class NonLogique extends Unaire {
     }
 
 	@Override
+	public String getType() {
+		return "boolean";
+	}
+	
+	@Override
 	public void verifier() {
-		
+		expression.verifier();
+		if(expression.getType()!="boolean"){
+			throw new AnalyseSemantiqueException(expression.getNoLigne(), "une expression booléenne est attendue");
+		}
 	}
 
 }

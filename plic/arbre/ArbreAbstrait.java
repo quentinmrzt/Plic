@@ -16,7 +16,7 @@ public abstract class ArbreAbstrait {
     }
     
     public int getNoLigne() {
-            return noLigne ;
+        return noLigne ;
     }
 
     public abstract void verifier();

@@ -1,5 +1,7 @@
 package plic.arbre.expression;
 
+import plic.exceptions.AnalyseSemantiqueException;
+
 /**
  * 3 déc. 2015
  *
@@ -12,4 +14,17 @@ public abstract class Comparaison extends Binaire {
         super(gauche, droite);
     }
 
+	public String getType() {
+		return "boolean";
+	}
+	
+	@Override
+	public void verifier() {
+		gauche.verifier();
+		droite.verifier();
+		if(gauche.getType() != droite.getType()){
+			throw new AnalyseSemantiqueException(gauche.getNoLigne(), "deux expressions du même type sont attendues");
+		}
+	}
+	
 }
