@@ -32,4 +32,19 @@ public class NonLogique extends Unaire {
 		}
 	}
 
+	@Override
+	public String toMIPS() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("\t# NonLogique :\n");		
+		sb.append("li $v0, 1\n");
+		sb.append("sw $v0, 0($sp)\n");
+		sb.append("add $sp, $sp, -4\n");
+		sb.append(expression.toMIPS());
+		sb.append("add $sp, $sp, 4\n");
+		sb.append("lw $t8, ($sp)\n");
+		sb.append("sub $v0, $t8, $v0\n\n");
+		
+		return sb.toString();
+	}
+
 }

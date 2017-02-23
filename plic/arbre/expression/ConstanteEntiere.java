@@ -20,7 +20,7 @@ public class ConstanteEntiere extends Constante {
 	@Override
 	public String toMIPS() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("\t#Range la constante entière dans $v0 :\n");
+		sb.append("#Range la constante entière dans $v0 :\n");
 		sb.append("li $v0, " + cste + "\n");
 		
 		return sb.toString();

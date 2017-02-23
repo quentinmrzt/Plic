@@ -20,7 +20,7 @@ public class ConstanteBool extends Constante {
 	@Override
 	public String toMIPS() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("\t#Range la constante booléenne dans $v0 :\n");
+		sb.append("#Range la constante booléenne dans $v0 :\n");
 		if(cste.equals("vrai")){
 			sb.append("li $v0, 1\n");
 		}else{

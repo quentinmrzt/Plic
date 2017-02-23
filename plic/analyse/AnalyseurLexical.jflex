@@ -28,6 +28,7 @@ import plic.exceptions.AnalyseLexicaleException;
   }
 %}
 
+idf = [a-zA-Z][a-zA-Z0-9]*
 csteE = [0-9]+
 csteB = "vrai" | "faux"
 
@@ -53,8 +54,19 @@ espace = {finDeLigne}  | [ \t\f]
 "("                	{ return symbol(CodesLexicaux.PAROUV); }
 ")"                	{ return symbol(CodesLexicaux.PARFER); }
 
+";"					{ return symbol(CodesLexicaux.POINTVIRGULE); }
+","					{ return symbol(CodesLexicaux.VIRGULE); }
+
+"publique"			{ return symbol(CodesLexicaux.PUBLIQUE); }
+"privee"			{ return symbol(CodesLexicaux.PRIVEE); }
+"entier"			{ return symbol(CodesLexicaux.ENTIER); }
+"classe"			{ return symbol(CodesLexicaux.CLASS); }
+"fin"			{ return symbol(CodesLexicaux.FIN); }
+
 {csteE}      	        { return symbol(CodesLexicaux.CONSTANTEINT, yytext()); }
 {csteB}      	        { return symbol(CodesLexicaux.CONSTANTEBOOL, yytext()); }
+
+{idf}					{ return symbol(CodesLexicaux.IDF, yytext()) ; }
 
 {espace}                { }
 
