@@ -27,6 +27,7 @@ parser code {:
         lesTerminaux.put(new Integer(CodesLexicaux.PARFER), ")") ;
         lesTerminaux.put(new Integer(CodesLexicaux.SUP), ">") ;
         lesTerminaux.put(new Integer(CodesLexicaux.INF), "<") ;
+        lesTerminaux.put(new Integer(CodesLexicaux.EGAL), "=") ;
         lesTerminaux.put(new Integer(CodesLexicaux.EGALEGAL), "==") ;
         lesTerminaux.put(new Integer(CodesLexicaux.DIFF), "!=") ;
         lesTerminaux.put(new Integer(CodesLexicaux.ET), "et") ;
@@ -38,6 +39,7 @@ parser code {:
         lesTerminaux.put(new Integer(CodesLexicaux.ENTIER), "entier") ;
         lesTerminaux.put(new Integer(CodesLexicaux.CLASS), "classe") ;
         lesTerminaux.put(new Integer(CodesLexicaux.FIN), "fin") ;
+        lesTerminaux.put(new Integer(CodesLexicaux.ECR), "ecrire") ;
 
         StringBuffer m = new StringBuffer() ;
 
@@ -76,18 +78,23 @@ parser code {:
 /* Terminals (tokens returned by the scanner).  */
 
 terminal Symbol    PLUS, MOINS, MULT, DIV, PAROUV, PARFER, POINTVIRGULE , VIRGULE ;
-terminal Symbol    SUP, INF, EGALEGAL, DIFF, ET, OU, NON ;
-terminal String    IDF, CONSTANTEINT, CONSTANTEBOOL, PUBLIQUE, PRIVEE, ENTIER , CLASS , FIN;
+terminal Symbol    SUP, INF, EGAL, EGALEGAL, DIFF, ET, OU, NON ;
+terminal String    IDF, CONSTANTEINT, CONSTANTEBOOL, PUBLIQUE, PRIVEE, ENTIER , CLASS , FIN ;
+terminal String    ECR, CONSTANTECHAINE ;
    
 /* Non terminals used in the grammar section.  */
 
 non terminal ArbreAbstrait PROG ;
 non terminal Expression EXPR, CSTE ;
-non terminal Declaration DECLARATION, DECL_CHAMP ;
+non terminal Declaration DECLARATION, DECL_CHAMP, DECL_CONST ;
 non terminal String TYPE, STATUT ;
 non terminal ListeDeclaration LDECLARATION ;
 non terminal Classe CLASSE ;
 non terminal ListeIdentificateur LIDF ;
+non terminal Instruction INSTRUCTION ;
+non terminal Affectation AFFECT ;
+non terminal Acces ACCES ;
+non terminal String ECRIRE ;
 
 precedence left INF, SUP ;
 precedence left EGALEGAL, DIFF;
@@ -105,18 +112,13 @@ PROG    ::=     CLASSE:c
 				{: BlocDInstructions arbre = new BlocDInstructions(cleft+1) ;
                    arbre.ajouter(c) ;
                    RESULT = arbre ; :}
-		|		/*EXPR:e 
-				{: BlocDInstructions arbre = new BlocDInstructions(eleft+1) ;
-                   arbre.ajouter(e) ;
-                   RESULT = arbre ; :}
-        |*/		LDECLARATION:d
-        		{: BlocDInstructions arbre = new BlocDInstructions(dleft+1) ;
-                   arbre.ajouter(d) ;
-                   RESULT = arbre ; :}
                 ;
                 
 CLASSE	::=		CLASS IDF:i LDECLARATION:ld FIN
 				{: Classe c = new Classe(ileft+1, new Identificateur(ileft+1, i), ld);
+					RESULT = c ; :}
+		|		CLASS IDF:i FIN
+				{: Classe c = new Classe(ileft+1, new Identificateur(ileft+1, i));
 					RESULT = c ; :}
 				;
 				
@@ -131,15 +133,18 @@ LDECLARATION ::= LDECLARATION:ld DECLARATION:d
 				
 DECLARATION ::=	DECL_CHAMP:d
 				{: RESULT = d ; :}
+		|		DECL_CONST:d
+				{: RESULT = d ; :}
 				;
                 
 DECL_CHAMP	::=	STATUT:s TYPE:t LIDF:li POINTVIRGULE
 				{: for(Identificateur i : li.iterable()){
+						i.verifier();
 						TDS.getInstance().ajouter(new Entree(i), new Symbole(s, t)); 
 					}
 				   RESULT = new Declaration(lileft+1); :}
 				;
-				
+					
 LIDF	::=		LIDF:li VIRGULE IDF:i
 				{: li.ajouter(new Identificateur(ileft+1, i));
 					RESULT = li ; :}
@@ -148,7 +153,7 @@ LIDF	::=		LIDF:li VIRGULE IDF:i
 					li.ajouter(new Identificateur(ileft+1, i)); 
 					RESULT = li; :}
 				;
-
+				
 STATUT	::= 	PUBLIQUE:p
                 {: RESULT = p ; :}
 		| 		PRIVEE:p
@@ -158,31 +163,36 @@ STATUT	::= 	PUBLIQUE:p
 TYPE	::= 	ENTIER:e
                 {: RESULT = e ; :}
 			;
+				
+DECL_CONST	::= INSTRUCTION:i
+				{: 
+					RESULT = new Declaration(ileft+1) ; :}
+				;
 
-/*******
-
-DECLARATION ::=	DECL_CHAMP
-		|		DECL_CONST
+INSTRUCTION ::= AFFECT:a
+				{: Instruction i = new Instruction(aleft+1, a);
+					RESULT = i ; :}
+		|		ECRIRE:e
+				{: System.out.println(e); :}
 				;
 				
-DECL_CONST	::= { INSTRUCTION }+
-				;
-
-INSTRUCTION ::= AFFECT
-		|		ECRIRE
-				;
-		
-AFFECT		::= ACCES EGAL EXPR POINTVIRGULE
+AFFECT		::= ACCES:a EGAL EXPR:e POINTVIRGULE
+				{: Affectation af = new Affectation(eleft+1, a, e);
+				RESULT = af ; :}
 			;
 
-ACCES		::=	IDF
+ACCES		::=	IDF:i
+				{: Identificateur idf = new Identificateur(ileft+1, i);
+				idf.verifier();
+				Acces ac = new Acces(ileft+1, idf);
+				RESULT = ac ; :}
 			;
 
-ECRIRE		::= ecrire EXPR POINTVIRGULE
-		|		ecrire csteChaine POINTVIRGULE
-			;
-*********/
-    
+ECRIRE		::= ECR EXPR POINTVIRGULE
+		|		ECR CONSTANTECHAINE:c POINTVIRGULE
+				{: RESULT = c ; :}
+			; 
+
 EXPR    ::=     EXPR:g  PLUS  EXPR:d
                 {: RESULT = new Plus(g, d) ; :}
         | 
@@ -203,7 +213,7 @@ EXPR    ::=     EXPR:g  PLUS  EXPR:d
         |              
                 EXPR:g  EGALEGAL  EXPR:d
                 {: RESULT = new Egal(g, d); :}
-        |       
+        |   
                 EXPR:g  DIFF  EXPR:d
                 {: RESULT = new Different(g, d); :}
         |                      

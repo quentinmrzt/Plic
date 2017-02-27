@@ -12,6 +12,12 @@ public class Classe extends ArbreAbstrait{
 			idf = i;
 			ld = liste;
 		}
+		
+		public Classe(int no, Identificateur i) {
+			super(no);
+			idf = i;
+			ld = null;
+		}
 
 		@Override
 		public void verifier() {

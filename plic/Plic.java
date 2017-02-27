@@ -25,7 +25,7 @@ public class Plic {
             ArbreAbstrait arbre = (ArbreAbstrait) analyseur.parse().value;
             
             arbre.verifier();            
-            System.err.println("expression stockée dans l'arbre : " + arbre + "\n");
+            //System.err.println("expression stockée dans l'arbre : " + arbre + "\n");
             
             StringBuilder sb = new StringBuilder(".text\nmain :\n" + arbre.toMIPS());
             sb.append("\nend :\n");
