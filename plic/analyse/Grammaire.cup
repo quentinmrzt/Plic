@@ -62,7 +62,7 @@ parser code {:
             }
             else {
                 m.append(" expression non terminée") ;
-            }
+            } 
 
         }
         throw new AnalyseSyntaxiqueException("" + m) ;
@@ -94,7 +94,7 @@ non terminal ListeIdentificateur LIDF ;
 non terminal Instruction INSTRUCTION ;
 non terminal Affectation AFFECT ;
 non terminal Acces ACCES ;
-non terminal String ECRIRE ;
+non terminal Ecrire ECRIRE ;
 
 precedence left INF, SUP ;
 precedence left EGALEGAL, DIFF;
@@ -120,7 +120,7 @@ CLASSE	::=		CLASS IDF:i LDECLARATION:ld FIN
 		|		CLASS IDF:i FIN
 				{: Classe c = new Classe(ileft+1, new Identificateur(ileft+1, i));
 					RESULT = c ; :}
-				;
+				; 
 				
 LDECLARATION ::= LDECLARATION:ld DECLARATION:d
 				{: ld.ajouter(d);
@@ -142,7 +142,7 @@ DECL_CHAMP	::=	STATUT:s TYPE:t LIDF:li POINTVIRGULE
 						i.verifier();
 						TDS.getInstance().ajouter(new Entree(i), new Symbole(s, t)); 
 					}
-				   RESULT = new Declaration(lileft+1); :}
+				   RESULT = new DeclarationChamp(lileft+1, li); :}
 				;
 					
 LIDF	::=		LIDF:li VIRGULE IDF:i
@@ -165,21 +165,19 @@ TYPE	::= 	ENTIER:e
 			;
 				
 DECL_CONST	::= INSTRUCTION:i
-				{: 
-					RESULT = new Declaration(ileft+1) ; :}
+				{: RESULT = new DeclarationConst(ileft+1, i) ; :}
 				;
 
 INSTRUCTION ::= AFFECT:a
-				{: Instruction i = new Instruction(aleft+1, a);
-					RESULT = i ; :}
+				{: RESULT = a ; :}
 		|		ECRIRE:e
-				{: System.out.println(e); :}
+				{: RESULT = e ; :}
 				;
 				
 AFFECT		::= ACCES:a EGAL EXPR:e POINTVIRGULE
 				{: Affectation af = new Affectation(eleft+1, a, e);
-				RESULT = af ; :}
-			;
+					RESULT = af ; :}
+			; 
 
 ACCES		::=	IDF:i
 				{: Identificateur idf = new Identificateur(ileft+1, i);
@@ -188,10 +186,13 @@ ACCES		::=	IDF:i
 				RESULT = ac ; :}
 			;
 
-ECRIRE		::= ECR EXPR POINTVIRGULE
+ECRIRE		::= ECR EXPR:exp POINTVIRGULE
+				{: Ecrire e = new Ecrire(expleft+1, exp);
+					RESULT = e ; :}
 		|		ECR CONSTANTECHAINE:c POINTVIRGULE
-				{: RESULT = c ; :}
-			; 
+				{: Ecrire e = new Ecrire(cleft+1, c);
+					RESULT = e ; :}
+			;
 
 EXPR    ::=     EXPR:g  PLUS  EXPR:d
                 {: RESULT = new Plus(g, d) ; :}

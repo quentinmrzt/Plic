@@ -1,10 +1,10 @@
 package plic.arbre.declaration;
 
-import plic.arbre.ArbreAbstrait;
 import plic.arbre.expression.*;
 import plic.arbre.identificateur.*;
+import plic.exceptions.*;
 
-public class Affectation extends ArbreAbstrait{
+public class Affectation extends Instruction{
 	protected Acces acc;
 	protected Expression exp;
 
@@ -16,6 +16,11 @@ public class Affectation extends ArbreAbstrait{
 
 	@Override
 	public void verifier() {
+		acc.verifier();
+		exp.verifier();
+		if(!acc.getIdentificateur().getType().equals(exp.getType())){
+			throw new NonConcordanceType("Les types ne correspondent pas");
+		}
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package plic.arbre.identificateur;
 
+import plic.TDS.TDS;
 import plic.arbre.ArbreAbstrait;
 
 public class Acces extends ArbreAbstrait {
@@ -9,10 +10,14 @@ public class Acces extends ArbreAbstrait {
 		super(no);
 		idf = i;
 	}
+	
+	public Identificateur getIdentificateur() {
+		return idf;
+	}
 
 	@Override
 	public void verifier() {
-		
+		idf.verifier();
 	}
 
 	@Override

@@ -3,10 +3,10 @@ package plic.TDS;
 import plic.arbre.identificateur.Identificateur;
 
 public class Entree {
-	protected String idf;
+	protected Identificateur idf;
 	
-	public Entree(Identificateur s){
-		idf = s.getNom();
+	public Entree(Identificateur i){
+		idf = i;
 	}
 
 }

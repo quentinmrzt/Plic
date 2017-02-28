@@ -34,6 +34,8 @@ csteB = "vrai" | "faux"
 entreGui = [\"\"] | [^\"]
 csteC = [\"]{entreGui}*[\"]
 
+commentaireSlashSlash = [/][/].*
+
 finDeLigne = \r|\n
 espace = {finDeLigne}  | [ \t\f]
 
@@ -72,6 +74,8 @@ espace = {finDeLigne}  | [ \t\f]
 {csteC}      	        { return symbol(CodesLexicaux.CONSTANTECHAINE, yytext()); }
 
 {idf}					{ return symbol(CodesLexicaux.IDF, yytext()) ; }
+
+<YYINITIAL>{commentaireSlashSlash} { }
 
 {espace}                { }
 

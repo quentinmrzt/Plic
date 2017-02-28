@@ -17,7 +17,9 @@ public class ListeDeclaration extends ArbreAbstrait{
 
 		@Override
 		public void verifier() {
-			
+			for(Declaration d : ld){
+				d.verifier();
+			}
 		}
 
 		@Override

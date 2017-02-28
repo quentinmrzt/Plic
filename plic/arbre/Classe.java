@@ -21,7 +21,9 @@ public class Classe extends ArbreAbstrait{
 
 		@Override
 		public void verifier() {
-			
+			idf.verifier();
+			if(ld != null)
+				ld.verifier();
 		}
 
 		@Override

@@ -22,7 +22,9 @@ public class ListeIdentificateur extends ArbreAbstrait{
 
 		@Override
 		public void verifier() {
-			
+			for(Identificateur i : li){
+				i.verifier();
+			}
 		}
 
 		@Override

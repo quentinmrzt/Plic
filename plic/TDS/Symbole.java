@@ -9,5 +9,9 @@ public class Symbole {
 			symboles[i] = sym[i];
 		}
 	}
+
+	public String getType() {
+		return symboles[1];
+	}
 	
 }
