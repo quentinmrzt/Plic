@@ -24,6 +24,10 @@ public class ListeDeclaration extends ArbreAbstrait{
 
 		@Override
 		public String toMIPS() {
-			return null;
+			StringBuilder sb = new StringBuilder();
+			for(Declaration d : ld){
+				sb.append(d.toMIPS());
+			}
+			return sb.toString();
 		}
 }

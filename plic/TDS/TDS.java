@@ -16,19 +16,20 @@ public class TDS {
 		return instance;		
 	}
 	
-	public void ajouter(Entree e, Symbole s){
+	public void ajouter(Entree e, Symbole s, int noligne){
 		if(!tds.containsKey(e)){
 			tds.put(e, s);
+			dep-=4;
 		}else{
-			throw new DoubleDeclException("double declaration exception");
+			throw new DoubleDeclException(noligne, "La variable \"" + e.getIdf() + "\" est déclarée plusieurs fois");
 		}
 	}
 	
-	public Symbole identifier(Entree e){
+	public Symbole identifier(Entree e, int ligne){
 		if(tds.containsKey(e)){
 			return tds.get(e);
 		}else{
-			throw new IdfNonTrouveException("identifiant non trouve");
+			throw new IdfNonTrouveException(ligne, "variable \"" + e.getIdf() + "\" non déclarée");
 		}
 	}
 	

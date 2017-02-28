@@ -21,13 +21,12 @@ public class Classe extends ArbreAbstrait{
 
 		@Override
 		public void verifier() {
-			idf.verifier();
 			if(ld != null)
 				ld.verifier();
 		}
 
 		@Override
-		public String toMIPS() {
-			return null;
+		public String toMIPS() {			
+			return ld.toMIPS();
 		}
 }

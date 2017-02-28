@@ -120,7 +120,7 @@ CLASSE	::=		CLASS IDF:i LDECLARATION:ld FIN
 		|		CLASS IDF:i FIN
 				{: Classe c = new Classe(ileft+1, new Identificateur(ileft+1, i));
 					RESULT = c ; :}
-				; 
+				;
 				
 LDECLARATION ::= LDECLARATION:ld DECLARATION:d
 				{: ld.ajouter(d);
@@ -139,11 +139,10 @@ DECLARATION ::=	DECL_CHAMP:d
                 
 DECL_CHAMP	::=	STATUT:s TYPE:t LIDF:li POINTVIRGULE
 				{: for(Identificateur i : li.iterable()){
-						i.verifier();
-						TDS.getInstance().ajouter(new Entree(i), new Symbole(s, t)); 
+						TDS.getInstance().ajouter(new Entree(i.getNom()), new Symbole(TDS.getInstance().getTailleZoneVariable(), s, t), tleft+1); 
 					}
 				   RESULT = new DeclarationChamp(lileft+1, li); :}
-				;
+				; 
 					
 LIDF	::=		LIDF:li VIRGULE IDF:i
 				{: li.ajouter(new Identificateur(ileft+1, i));
@@ -153,7 +152,7 @@ LIDF	::=		LIDF:li VIRGULE IDF:i
 					li.ajouter(new Identificateur(ileft+1, i)); 
 					RESULT = li; :}
 				;
-				
+		
 STATUT	::= 	PUBLIQUE:p
                 {: RESULT = p ; :}
 		| 		PRIVEE:p
@@ -181,7 +180,6 @@ AFFECT		::= ACCES:a EGAL EXPR:e POINTVIRGULE
 
 ACCES		::=	IDF:i
 				{: Identificateur idf = new Identificateur(ileft+1, i);
-				idf.verifier();
 				Acces ac = new Acces(ileft+1, idf);
 				RESULT = ac ; :}
 			;
@@ -235,8 +233,11 @@ EXPR    ::=     EXPR:g  PLUS  EXPR:d
         |
                 PAROUV  EXPR:e  PARFER
                 {: RESULT = e ; :}
+        |		
+        		IDF:i
+        		{: RESULT = new Identificateur(ileft+1, i) ; :}
                 ;
-
+ 
 CSTE    ::=     CONSTANTEINT:e 
                 {: RESULT = new ConstanteEntiere(e, eleft+1) ; :}
         |       CONSTANTEBOOL:e 

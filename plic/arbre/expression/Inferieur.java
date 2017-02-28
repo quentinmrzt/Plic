@@ -23,8 +23,8 @@ public class Inferieur extends Comparaison {
 	public void verifier() {
 		gauche.verifier();
 		droite.verifier();
-		if(gauche.getType()!="integer" || droite.getType()!="integer"){
-			throw new AnalyseSemantiqueException(gauche.getNoLigne(), "deux expressions entiÃ¨res sont attendues");
+		if(!gauche.getType().equals("entier") || !droite.getType().equals("entier")){
+			throw new AnalyseSemantiqueException(gauche.getNoLigne(), "deux expressions entières sont attendues");
 		}
 	}
 	

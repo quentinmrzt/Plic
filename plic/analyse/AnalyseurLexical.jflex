@@ -22,11 +22,15 @@ import plic.exceptions.AnalyseLexicaleException;
   private Symbol symbol(int type) {
 	return new Symbol(type, yyline, yycolumn) ;
   }
-
+  
   private Symbol symbol(int type, Object value) {
 	return new Symbol(type, yyline, yycolumn, value) ;
   }
 %}
+
+public = "publique"
+private = "privee"
+int = "entier"
 
 idf = [a-zA-Z][a-zA-Z0-9]*
 csteE = [0-9]+
@@ -62,9 +66,10 @@ espace = {finDeLigne}  | [ \t\f]
 ";"					{ return symbol(CodesLexicaux.POINTVIRGULE); }
 ","					{ return symbol(CodesLexicaux.VIRGULE); }
 
-"publique"			{ return symbol(CodesLexicaux.PUBLIQUE); }
-"privee"			{ return symbol(CodesLexicaux.PRIVEE); }
-"entier"			{ return symbol(CodesLexicaux.ENTIER); }
+{public}			{ return symbol(CodesLexicaux.PUBLIQUE, yytext()); }
+{private}			{ return symbol(CodesLexicaux.PRIVEE, yytext()); }
+{int}				{ return symbol(CodesLexicaux.ENTIER, yytext()); }
+
 "classe"			{ return symbol(CodesLexicaux.CLASS); }
 "fin"				{ return symbol(CodesLexicaux.FIN); }
 "ecrire"			{ return symbol(CodesLexicaux.ECR); }

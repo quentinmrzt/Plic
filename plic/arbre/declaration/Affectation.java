@@ -25,7 +25,12 @@ public class Affectation extends Instruction{
 
 	@Override
 	public String toMIPS() {
-		return null;
+		StringBuilder sb = new StringBuilder();
+		sb.append("\t# Affectation :\n");
+		sb.append(exp.toMIPS());
+		sb.append(acc.toMIPS());
+		
+		return sb.toString();
 	}
 
 }

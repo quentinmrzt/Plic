@@ -15,7 +15,7 @@ public class DeclarationConst extends Declaration{
 
 	@Override
 	public String toMIPS(){
-		return null;
+		return inst.toMIPS();
 	}
 
 }

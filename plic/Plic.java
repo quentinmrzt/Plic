@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import plic.analyse.AnalyseurLexical;
 import plic.analyse.AnalyseurSyntaxique;
 import plic.arbre.ArbreAbstrait;
@@ -27,15 +28,10 @@ public class Plic {
             arbre.verifier();            
             //System.err.println("expression stockée dans l'arbre : " + arbre + "\n");
             
-            StringBuilder sb = new StringBuilder(".text\nmain :\n" + arbre.toMIPS());
-            sb.append("\nend :\n");
-            sb.append("# Fin du programme\n");
-            sb.append("move $v1, $v0\t# copie de v0 dans v1 pour permettre les tests de plic0\n");
-            sb.append("li $v0, 10\t# retour au système\n");
-            sb.append("syscall\n");
+            String mips = arbre.toMIPS();
             
             System.out.println("COMPILATION OK");
-            compil(sb.toString(), fichier);
+            compil(mips, fichier);
         } 
         catch (FileNotFoundException ex) {
             System.err.println("Fichier " + fichier + " inexistant") ;

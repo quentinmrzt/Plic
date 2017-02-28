@@ -23,7 +23,7 @@ public class Superieur extends Comparaison {
 	public void verifier() {
 		gauche.verifier();
 		droite.verifier();
-		if(gauche.getType()!="integer" || droite.getType()!="integer"){
+		if(!gauche.getType().equals("entier") || !droite.getType().equals("entier")){
 			throw new AnalyseSemantiqueException(gauche.getNoLigne(), "deux expressions entières sont attendues");
 		}
 	}

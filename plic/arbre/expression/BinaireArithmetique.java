@@ -15,14 +15,14 @@ public abstract class BinaireArithmetique extends Binaire {
     }
     
 	public String getType() {
-		return "integer";
+		return "entier";
 	}
 	
 	@Override
 	public void verifier() {
 		gauche.verifier();
 		droite.verifier();
-		if(gauche.getType()!="integer" || droite.getType()!="integer"){
+		if(!gauche.getType().equals("entier") || !droite.getType().equals("entier")){
 			throw new AnalyseSemantiqueException(gauche.getNoLigne(), "deux expressions entières sont attendues");
 		}
 	}

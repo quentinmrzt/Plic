@@ -1,6 +1,5 @@
 package plic.arbre.identificateur;
 
-import plic.TDS.TDS;
 import plic.arbre.ArbreAbstrait;
 
 public class Acces extends ArbreAbstrait {
@@ -22,7 +21,11 @@ public class Acces extends ArbreAbstrait {
 
 	@Override
 	public String toMIPS() {
-		return null;
+		StringBuilder sb = new StringBuilder();
+		sb.append("\t# Acces variable :\n");
+		sb.append("sw $v0, " + idf.getDeplacement() + "($s7)\n");
+		
+		return sb.toString();
 	}
 
 }

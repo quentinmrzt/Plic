@@ -17,6 +17,6 @@ public class DeclarationChamp extends Declaration{
 
 	@Override
 	public String toMIPS(){
-		return null;
+		return "";
 	}
 }
