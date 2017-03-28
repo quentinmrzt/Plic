@@ -20,7 +20,7 @@ public class Different extends Comparaison {
 	@Override
 	public String toMIPS() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("\t# Différent :\n");
+		sb.append("\t# Different :\n");
 		sb.append(gauche.toMIPS());		//Code cible qui évalue l'opérande gauche et le range dans $v0
 		sb.append("sw $v0, 0($sp)\n");
 		sb.append("add $sp, $sp, -4\n");

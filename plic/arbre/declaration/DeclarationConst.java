@@ -1,5 +1,7 @@
 package plic.arbre.declaration;
 
+import plic.arbre.instruction.Instruction;
+
 public class DeclarationConst extends Declaration{
 	protected Instruction inst;
 

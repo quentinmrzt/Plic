@@ -5,6 +5,7 @@ import plic.arbre.* ;
 import plic.arbre.expression.* ;
 import plic.arbre.declaration.* ;
 import plic.arbre.identificateur.* ;
+import plic.arbre.instruction.*;
 import plic.exceptions.*;
 import plic.TDS.*;
 
@@ -40,6 +41,10 @@ parser code {:
         lesTerminaux.put(new Integer(CodesLexicaux.CLASS), "classe") ;
         lesTerminaux.put(new Integer(CodesLexicaux.FIN), "fin") ;
         lesTerminaux.put(new Integer(CodesLexicaux.ECR), "ecrire") ;
+        lesTerminaux.put(new Integer(CodesLexicaux.SI), "si") ;
+        lesTerminaux.put(new Integer(CodesLexicaux.ALORS), "alors") ;
+        lesTerminaux.put(new Integer(CodesLexicaux.SINON), "sinon") ;
+        lesTerminaux.put(new Integer(CodesLexicaux.FSI), "fsi") ;
 
         StringBuffer m = new StringBuffer() ;
 
@@ -80,7 +85,7 @@ parser code {:
 terminal Symbol    PLUS, MOINS, MULT, DIV, PAROUV, PARFER, POINTVIRGULE , VIRGULE ;
 terminal Symbol    SUP, INF, EGAL, EGALEGAL, DIFF, ET, OU, NON ;
 terminal String    IDF, CONSTANTEINT, CONSTANTEBOOL, PUBLIQUE, PRIVEE, ENTIER , CLASS , FIN ;
-terminal String    ECR, CONSTANTECHAINE ;
+terminal String    ECR, CONSTANTECHAINE, SI, ALORS, SINON, FSI ;
    
 /* Non terminals used in the grammar section.  */
 
@@ -91,10 +96,12 @@ non terminal String TYPE, STATUT ;
 non terminal ListeDeclaration LDECLARATION ;
 non terminal Classe CLASSE ;
 non terminal ListeIdentificateur LIDF ;
+non terminal ListeInstruction LINST ;
 non terminal Instruction INSTRUCTION ;
 non terminal Affectation AFFECT ;
 non terminal Acces ACCES ;
 non terminal Ecrire ECRIRE ;
+non terminal Condition CONDITION ;
 
 precedence left INF, SUP ;
 precedence left EGALEGAL, DIFF;
@@ -166,11 +173,22 @@ TYPE	::= 	ENTIER:e
 DECL_CONST	::= INSTRUCTION:i
 				{: RESULT = new DeclarationConst(ileft+1, i) ; :}
 				;
+				
+LINST		::= LINST:li INSTRUCTION:i
+				{: li.ajouter(i);
+					RESULT = li ; :}
+		|		INSTRUCTION:i
+				{: ListeInstruction li = new ListeInstruction(ileft+1);
+					li.ajouter(i); 
+					RESULT = li; :}
+				;
 
 INSTRUCTION ::= AFFECT:a
 				{: RESULT = a ; :}
 		|		ECRIRE:e
 				{: RESULT = e ; :}
+		|		CONDITION:c
+				{: RESULT = c ; :}
 				;
 				
 AFFECT		::= ACCES:a EGAL EXPR:e POINTVIRGULE
@@ -182,6 +200,20 @@ ACCES		::=	IDF:i
 				{: Identificateur idf = new Identificateur(ileft+1, i);
 				Acces ac = new Acces(ileft+1, idf);
 				RESULT = ac ; :}
+			;
+			
+CONDITION	::=	SI EXPR:e ALORS LINST:l FSI
+				{: Condition c = new Condition(eleft+1, e, l, null) ; 
+					RESULT = c ; :}
+		| 		SI EXPR:e ALORS LINST:l1 SINON LINST:l2 FSI
+				{: Condition c = new Condition(eleft+1, e, l1, l2) ;  
+					RESULT = c ; :}
+		|		SI EXPR:e ALORS FSI
+				{: Condition c = new Condition(eleft+1, e, null, null) ;  
+					RESULT = c ; :}
+		|		SI EXPR:e ALORS SINON LINST:l FSI
+				{: Condition c = new Condition(eleft+1, e, null, l) ;  
+					RESULT = c ; :}
 			;
 
 ECRIRE		::= ECR EXPR:exp POINTVIRGULE

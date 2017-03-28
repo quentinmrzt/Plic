@@ -15,7 +15,7 @@ public abstract class Comparaison extends Binaire {
     }
 
 	public String getType() {
-		return "boolean";
+		return "booleen";
 	}
 	
 	@Override
@@ -23,7 +23,7 @@ public abstract class Comparaison extends Binaire {
 		gauche.verifier();
 		droite.verifier();
 		if(gauche.getType() != droite.getType()){
-			throw new AnalyseSemantiqueException(gauche.getNoLigne(), "deux expressions du même type sont attendues");
+			throw new AnalyseSemantiqueException(gauche.getNoLigne(), "deux expressions du meme type sont attendues");
 		}
 	}
 	

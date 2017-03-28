@@ -15,15 +15,15 @@ public abstract class BinaireLogique extends Binaire {
     }
     
 	public String getType() {
-		return "boolean";
+		return "booleen";
 	}
 	
 	@Override
 	public void verifier() {
 		gauche.verifier();
 		droite.verifier();
-		if(gauche.getType()!="boolean" || droite.getType()!="boolean"){
-			throw new AnalyseSemantiqueException(gauche.getNoLigne(), "deux expressions booléennes sont attendues");
+		if(!gauche.getType().equals("booleen") || !droite.getType().equals("booleen")){
+			throw new AnalyseSemantiqueException(gauche.getNoLigne(), "deux expressions booleennes sont attendues");
 		}
 	}
     

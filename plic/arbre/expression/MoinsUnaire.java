@@ -21,14 +21,14 @@ public class MoinsUnaire extends Unaire {
 
 	@Override
 	public String getType() {
-		return "integer";
+		return "entier";
 	}
 
 	@Override
 	public void verifier() {
 		expression.verifier();
-		if(expression.getType()!="integer"){
-			throw new AnalyseSemantiqueException(expression.getNoLigne(), "une expression entière est attendue");
+		if(!expression.getType().equals("entier")){
+			throw new AnalyseSemantiqueException(expression.getNoLigne(), "une expression entiere est attendue");
 		}
 	}
 	

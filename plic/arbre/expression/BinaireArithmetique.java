@@ -23,7 +23,7 @@ public abstract class BinaireArithmetique extends Binaire {
 		gauche.verifier();
 		droite.verifier();
 		if(!gauche.getType().equals("entier") || !droite.getType().equals("entier")){
-			throw new AnalyseSemantiqueException(gauche.getNoLigne(), "deux expressions entières sont attendues");
+			throw new AnalyseSemantiqueException(gauche.getNoLigne(), "deux expressions entieres sont attendues");
 		}
 	}
 	

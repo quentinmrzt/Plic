@@ -24,14 +24,14 @@ public class Inferieur extends Comparaison {
 		gauche.verifier();
 		droite.verifier();
 		if(!gauche.getType().equals("entier") || !droite.getType().equals("entier")){
-			throw new AnalyseSemantiqueException(gauche.getNoLigne(), "deux expressions enti�res sont attendues");
+			throw new AnalyseSemantiqueException(gauche.getNoLigne(), "deux expressions entieres sont attendues");
 		}
 	}
 	
 	@Override
 	public String toMIPS() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("\t# Inférieur :\n");
+		sb.append("\t# Inferieur :\n");
 		sb.append(gauche.toMIPS());		//Code cible qui évalue l'opérande gauche et le range dans $v0
 		sb.append("sw $v0, 0($sp)\n");
 		sb.append("add $sp, $sp, -4\n");

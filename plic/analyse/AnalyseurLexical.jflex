@@ -28,14 +28,14 @@ import plic.exceptions.AnalyseLexicaleException;
   }
 %}
 
-public = "publique"
-private = "privee"
-int = "entier"
+pub = "publique"
+pri = "privee"
+ent = "entier"
 
 idf = [a-zA-Z][a-zA-Z0-9]*
 csteE = [0-9]+
 csteB = "vrai" | "faux"
-entreGui = [\"\"] | [^\"]
+entreGui = [^\"] | [\"][\"]
 csteC = [\"]{entreGui}*[\"]
 
 commentaireSlashSlash = [/][/].*
@@ -66,13 +66,18 @@ espace = {finDeLigne}  | [ \t\f]
 ";"					{ return symbol(CodesLexicaux.POINTVIRGULE); }
 ","					{ return symbol(CodesLexicaux.VIRGULE); }
 
-{public}			{ return symbol(CodesLexicaux.PUBLIQUE, yytext()); }
-{private}			{ return symbol(CodesLexicaux.PRIVEE, yytext()); }
-{int}				{ return symbol(CodesLexicaux.ENTIER, yytext()); }
+{pub}			{ return symbol(CodesLexicaux.PUBLIQUE, yytext()); }
+{pri}			{ return symbol(CodesLexicaux.PRIVEE, yytext()); }
+{ent}				{ return symbol(CodesLexicaux.ENTIER, yytext()); }
 
 "classe"			{ return symbol(CodesLexicaux.CLASS); }
 "fin"				{ return symbol(CodesLexicaux.FIN); }
 "ecrire"			{ return symbol(CodesLexicaux.ECR); }
+
+"si"				{ return symbol(CodesLexicaux.SI); }
+"alors"				{ return symbol(CodesLexicaux.ALORS); }
+"sinon"				{ return symbol(CodesLexicaux.SINON); }
+"fsi"				{ return symbol(CodesLexicaux.FSI); }
 
 {csteE}      	        { return symbol(CodesLexicaux.CONSTANTEINT, yytext()); }
 {csteB}      	        { return symbol(CodesLexicaux.CONSTANTEBOOL, yytext()); }
