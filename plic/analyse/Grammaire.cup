@@ -39,6 +39,7 @@ parser code {:
         lesTerminaux.put(new Integer(CodesLexicaux.PRIVEE), "privee") ;
         lesTerminaux.put(new Integer(CodesLexicaux.ENTIER), "entier") ;
         lesTerminaux.put(new Integer(CodesLexicaux.CLASS), "classe") ;
+        lesTerminaux.put(new Integer(CodesLexicaux.DEBUT), "debut") ;
         lesTerminaux.put(new Integer(CodesLexicaux.FIN), "fin") ;
         lesTerminaux.put(new Integer(CodesLexicaux.ECR), "ecrire") ;
         lesTerminaux.put(new Integer(CodesLexicaux.SI), "si") ;
@@ -84,16 +85,17 @@ parser code {:
 
 terminal Symbol    PLUS, MOINS, MULT, DIV, PAROUV, PARFER, POINTVIRGULE , VIRGULE ;
 terminal Symbol    SUP, INF, EGAL, EGALEGAL, DIFF, ET, OU, NON ;
-terminal String    IDF, CONSTANTEINT, CONSTANTEBOOL, PUBLIQUE, PRIVEE, ENTIER , CLASS , FIN ;
+terminal String    IDF, CONSTANTEINT, CONSTANTEBOOL, PUBLIQUE, PRIVEE, ENTIER , CLASS , DEBUT , FIN ;
 terminal String    ECR, CONSTANTECHAINE, SI, ALORS, SINON, FSI ;
    
 /* Non terminals used in the grammar section.  */
 
 non terminal ArbreAbstrait PROG ;
 non terminal Expression EXPR, CSTE ;
-non terminal Declaration DECLARATION, DECL_CHAMP, DECL_CONST ;
+non terminal Declaration DECLARATION, DECL_CHAMP, DECL_CONST , DECL_VAR ;
 non terminal String TYPE, STATUT ;
 non terminal ListeDeclaration LDECLARATION ;
+non terminal ListeClasse LCLASSE ;
 non terminal Classe CLASSE ;
 non terminal ListeIdentificateur LIDF ;
 non terminal ListeInstruction LINST ;
@@ -102,6 +104,7 @@ non terminal Affectation AFFECT ;
 non terminal Acces ACCES ;
 non terminal Ecrire ECRIRE ;
 non terminal Condition CONDITION ;
+non terminal Parametres PARAMETRES ;
 
 precedence left INF, SUP ;
 precedence left EGALEGAL, DIFF;
@@ -115,10 +118,19 @@ precedence left NON ;
  
 start with PROG ;
 
-PROG    ::=     CLASSE:c
-				{: BlocDInstructions arbre = new BlocDInstructions(cleft+1) ;
-                   arbre.ajouter(c) ;
+PROG    ::=		LCLASSE:lc
+				{: BlocDInstructions arbre = new BlocDInstructions(lcleft+1) ;
+                   arbre.ajouter(lc) ;
                    RESULT = arbre ; :}
+                ;
+
+LCLASSE	::=     LCLASSE:lc CLASSE:c
+				{: lc.ajouter(c);
+					RESULT = lc ; :}     
+		|		CLASSE:c
+				{: ListeClasse lc = new ListeClasse(cleft+1);
+					lc.ajouter(c) ;
+                   	RESULT = lc ; :}
                 ;
                 
 CLASSE	::=		CLASS IDF:i LDECLARATION:ld FIN
@@ -146,7 +158,7 @@ DECLARATION ::=	DECL_CHAMP:d
                 
 DECL_CHAMP	::=	STATUT:s TYPE:t LIDF:li POINTVIRGULE
 				{: for(Identificateur i : li.iterable()){
-						TDS.getInstance().ajouter(new Entree(i.getNom()), new Symbole(TDS.getInstance().getTailleZoneVariable(), s, t), tleft+1); 
+						TDS.getInstance().ajouter(new Entree(i.getNom()), new Symbole(TDS.getInstance().getTailleZoneVariable(), t, s), tleft+1); 
 					}
 				   RESULT = new DeclarationChamp(lileft+1, li); :}
 				; 
@@ -168,11 +180,22 @@ STATUT	::= 	PUBLIQUE:p
 				
 TYPE	::= 	ENTIER:e
                 {: RESULT = e ; :}
-			;
-				
-DECL_CONST	::= INSTRUCTION:i
-				{: RESULT = new DeclarationConst(ileft+1, i) ; :}
 				;
+				
+DECL_CONST	::= STATUT:s IDF:i PARAMETRES:p DEBUT DECL_VAR LINST:li FIN
+				{: RESULT = new DeclarationConst(ileft+1, new Identificateur(ileft+1, i), li) ; :}
+				;
+				
+DECL_VAR	::=	TYPE:t LIDF:li POINTVIRGULE
+				{: for(Identificateur i : li.iterable()){
+						TDS.getInstance().ajouter(new Entree(i.getNom()), new Symbole(TDS.getInstance().getTailleZoneVariable(), t), tleft+1); 
+					}
+				   RESULT = new DeclarationVar(lileft+1, li); :}
+				;
+			
+PARAMETRES	::=	PAROUV:p PARFER
+				{: RESULT = new Parametres(pleft+1) ; :}
+			;
 				
 LINST		::= LINST:li INSTRUCTION:i
 				{: li.ajouter(i);

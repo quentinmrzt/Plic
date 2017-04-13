@@ -27,7 +27,5 @@ public class Entree {
 		Entree e = (Entree)obj;
 		return idf.equals(e.getIdf());
 	}
-	
-	
 
 }

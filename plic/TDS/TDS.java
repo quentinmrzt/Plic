@@ -21,7 +21,7 @@ public class TDS {
 			tds.put(e, s);
 			dep-=4;
 		}else{
-			throw new DoubleDeclException(noligne, "La variable \"" + e.getIdf() + "\" est déclarée plusieurs fois");
+			throw new DoubleDeclException(noligne, "La variable \"" + e.getIdf() + "\" est declaree plusieurs fois");
 		}
 	}
 	
@@ -29,7 +29,7 @@ public class TDS {
 		if(tds.containsKey(e)){
 			return tds.get(e);
 		}else{
-			throw new IdfNonTrouveException(ligne, "variable \"" + e.getIdf() + "\" non déclarée");
+			throw new IdfNonTrouveException(ligne, "variable \"" + e.getIdf() + "\" non declaree");
 		}
 	}
 	

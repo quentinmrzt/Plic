@@ -1,23 +1,27 @@
 package plic.arbre.declaration;
 
-import plic.arbre.instruction.Instruction;
+import plic.arbre.identificateur.Identificateur;
+import plic.arbre.instruction.ListeInstruction;
 
 public class DeclarationConst extends Declaration{
-	protected Instruction inst;
+	protected Identificateur idf;
+	protected ListeInstruction linst;
 
-	public DeclarationConst(int no, Instruction i) {
+	public DeclarationConst(int no, Identificateur i, ListeInstruction li) {
 		super(no);
-		inst = i;
+		idf = i;
+		linst = li;
 	}
 
 	@Override
 	public void verifier(){
-		inst.verifier();
+		//idf.verifier();
+		linst.verifier();
 	}
 
 	@Override
 	public String toMIPS(){
-		return inst.toMIPS();
+		return null;
 	}
 
 }

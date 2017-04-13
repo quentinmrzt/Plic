@@ -13,7 +13,7 @@ public class Symbole {
 	}
 
 	public String getType() {
-		return symboles[1];
+		return symboles[0];
 	}
 	
 	public int getDeplacement(){

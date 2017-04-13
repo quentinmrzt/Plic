@@ -71,6 +71,7 @@ espace = {finDeLigne}  | [ \t\f]
 {ent}				{ return symbol(CodesLexicaux.ENTIER, yytext()); }
 
 "classe"			{ return symbol(CodesLexicaux.CLASS); }
+"debut"				{ return symbol(CodesLexicaux.DEBUT); }
 "fin"				{ return symbol(CodesLexicaux.FIN); }
 "ecrire"			{ return symbol(CodesLexicaux.ECR); }
 
