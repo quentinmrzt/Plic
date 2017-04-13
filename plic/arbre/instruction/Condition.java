@@ -36,12 +36,12 @@ public class Condition extends Instruction {
 		sb.append("si" + this.hashCode() + ": beqz $v0, sinon" + this.hashCode() + "\n");
 		sb.append("alors" + this.hashCode() + ":\n");
 		if(liSi != null){
-			sb.append("\t" + liSi.toMIPS());
+			sb.append(liSi.toMIPS());
 		}
 		sb.append("j finsi" + this.hashCode() + "\n");
 		sb.append("sinon" + this.hashCode() + ":\n");
 		if(liSinon != null){
-			sb.append("\t" + liSinon.toMIPS());
+			sb.append(liSinon.toMIPS());
 		}
 		sb.append("finsi" + this.hashCode() + ":\n");
 		return sb.toString();

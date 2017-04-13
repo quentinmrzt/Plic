@@ -26,7 +26,10 @@ public class Classe extends ArbreAbstrait{
 		}
 
 		@Override
-		public String toMIPS() {			
-			return ld.toMIPS();
+		public String toMIPS() {
+			if(ld != null)
+				return ld.toMIPS();
+			else
+				return "";
 		}
 }
