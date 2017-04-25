@@ -1,25 +1,27 @@
 package plic.arbre.instruction;
 
+import plic.TDS.TDS;
 import plic.arbre.expression.*;
 
 public class Ecrire extends Instruction{
 	protected Expression exp;
 	protected String str;
 
-	public Ecrire(int no, Expression e) {
-		super(no);
+	public Ecrire(int no, Expression e, int noBloc) {
+		super(no, noBloc);
 		exp = e;
 		str = null;
 	}
 	
-	public Ecrire(int no, String s) {
-		super(no);
+	public Ecrire(int no, String s, int noBloc) {
+		super(no, noBloc);
 		str = s;
 		exp = null;
 	}
 
 	@Override
 	public void verifier() {
+		TDS.getInstance().setDicoCourant(noBloc);
 		if(str == null)
 			exp.verifier();
 	}
@@ -62,6 +64,9 @@ public class Ecrire extends Instruction{
 		}
 		
 		return sb.toString();
+	}
+
+	public void ajoutVar() {
 	}
 
 }

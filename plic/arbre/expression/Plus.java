@@ -32,4 +32,7 @@ public class Plus extends BinaireArithmetique {
 		return sb.toString();
 	}
 
+	public void ajoutVar() {
+	}
+
 }

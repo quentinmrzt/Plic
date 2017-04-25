@@ -31,5 +31,8 @@ public class OuLogique extends BinaireLogique {
 		
 		return sb.toString();
 	}
+
+	public void ajoutVar() {
+	}
 	
 }

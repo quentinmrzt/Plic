@@ -2,6 +2,7 @@ package plic.arbre.instruction;
 
 import java.util.ArrayList;
 
+import plic.TDS.TDS;
 import plic.arbre.ArbreAbstrait;
 
 public class ListeInstruction extends ArbreAbstrait{
@@ -14,6 +15,18 @@ public class ListeInstruction extends ArbreAbstrait{
 	
 	public void ajouter(Instruction i){
 		li.add(i);
+	}
+	
+	public void setNoBloc(){		
+		for(Instruction i : li){
+			i.setNoBloc(TDS.getInstance().getDicoCourant());
+		}
+	}
+
+	public void ajoutVar() {
+		for (Instruction i : li){
+			i.ajoutVar();
+		}
 	}
 
 	@Override

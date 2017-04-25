@@ -42,5 +42,8 @@ public class Inferieur extends Comparaison {
 		
 		return sb.toString();
 	}
+
+	public void ajoutVar() {
+	}
     
 }

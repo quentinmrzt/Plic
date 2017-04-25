@@ -65,6 +65,7 @@ espace = {finDeLigne}  | [ \t\f]
 
 ";"					{ return symbol(CodesLexicaux.POINTVIRGULE); }
 ","					{ return symbol(CodesLexicaux.VIRGULE); }
+"."					{ return symbol(CodesLexicaux.POINT); }
 
 {pub}			{ return symbol(CodesLexicaux.PUBLIQUE, yytext()); }
 {pri}			{ return symbol(CodesLexicaux.PRIVEE, yytext()); }
@@ -73,7 +74,12 @@ espace = {finDeLigne}  | [ \t\f]
 "classe"			{ return symbol(CodesLexicaux.CLASS); }
 "debut"				{ return symbol(CodesLexicaux.DEBUT); }
 "fin"				{ return symbol(CodesLexicaux.FIN); }
+
+"nouveau" 			{ return symbol(CodesLexicaux.NOUVEAU); }
+
 "ecrire"			{ return symbol(CodesLexicaux.ECR); }
+
+"entier"			{ return symbol(CodesLexicaux.ENTIER); }
 
 "si"				{ return symbol(CodesLexicaux.SI); }
 "alors"				{ return symbol(CodesLexicaux.ALORS); }

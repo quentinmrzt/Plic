@@ -30,4 +30,7 @@ public class ConstanteBool extends Constante {
 		return sb.toString();
 	}
 
+	public void ajoutVar() {
+	}
+
 }

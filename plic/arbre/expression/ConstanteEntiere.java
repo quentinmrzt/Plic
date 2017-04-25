@@ -26,4 +26,7 @@ public class ConstanteEntiere extends Constante {
 		return sb.toString();
 	}
 
+	public void ajoutVar() {
+	}
+
 }

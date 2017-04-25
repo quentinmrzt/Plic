@@ -1,7 +1,5 @@
 package plic.arbre;
 
-import plic.TDS.TDS;
-
 /**
  * 3 déc. 2015
  *
@@ -9,7 +7,6 @@ import plic.TDS.TDS;
  */
 
 public class BlocDInstructions extends ArbreAbstrait {
-    
     protected ArbreAbstrait expr ;
     
     public BlocDInstructions(int n) {
@@ -20,6 +17,11 @@ public class BlocDInstructions extends ArbreAbstrait {
         expr = a ;
     }
     
+	public void ajoutVar() {
+		expr.setClasseRacine(classeRacine);
+		expr.ajoutVar();
+	}
+    
     @Override
     public String toString() {
         return expr.toString() ;
@@ -27,6 +29,7 @@ public class BlocDInstructions extends ArbreAbstrait {
 
 	@Override
 	public void verifier() {
+        expr.setClasseRacine(classeRacine);
 		expr.verifier();
 	}
 
@@ -34,8 +37,6 @@ public class BlocDInstructions extends ArbreAbstrait {
 	public String toMIPS() {
         StringBuilder sb = new StringBuilder();
         sb.append(".text\nmain :\n");
-        sb.append("move $s7, $sp\n");
-        sb.append("addi $sp, $sp, " + TDS.getInstance().getTailleZoneVariable() + "\n");
         sb.append(expr.toMIPS());
         sb.append("\nend :\n");
         sb.append("# Fin du programme\n");

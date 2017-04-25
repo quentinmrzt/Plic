@@ -1,5 +1,6 @@
 package plic.arbre.instruction;
 
+import plic.TDS.TDS;
 import plic.arbre.expression.Expression;
 import plic.exceptions.ConditionNonBoolException;
 
@@ -8,8 +9,8 @@ public class Condition extends Instruction {
 	protected ListeInstruction liSi;
 	protected ListeInstruction liSinon;
 
-	public Condition(int no, Expression e, ListeInstruction l1, ListeInstruction l2) {
-		super(no);
+	public Condition(int no, Expression e, ListeInstruction l1, ListeInstruction l2, int noBloc) {
+		super(no, noBloc);
 		exp = e;
 		liSi = l1;
 		liSinon = l2;
@@ -17,6 +18,7 @@ public class Condition extends Instruction {
 
 	@Override
 	public void verifier() {
+		TDS.getInstance().setDicoCourant(noBloc);
 		if(!exp.getType().equals("booleen")){
 			throw new ConditionNonBoolException(this.getNoLigne(), "L'expression d'une condition doit etre de type booleenne");
 		}else{
@@ -45,6 +47,9 @@ public class Condition extends Instruction {
 		}
 		sb.append("finsi" + this.hashCode() + ":\n");
 		return sb.toString();
+	}
+
+	public void ajoutVar() {
 	}
 
 }

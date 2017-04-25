@@ -31,5 +31,8 @@ public class Mult extends BinaireArithmetique {
 		
 		return sb.toString();
 	}
+
+	public void ajoutVar() {
+	}
     
 }

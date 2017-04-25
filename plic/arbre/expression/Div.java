@@ -45,5 +45,8 @@ public class Div extends BinaireArithmetique {
 		
 		return sb.toString();
 	}
+
+	public void ajoutVar() {
+	}
     
 }

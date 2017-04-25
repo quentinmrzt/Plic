@@ -31,4 +31,7 @@ public class ListeIdentificateur extends ArbreAbstrait{
 		public String toMIPS() {
 			return null;
 		}
+
+		public void ajoutVar() {
+		}
 }

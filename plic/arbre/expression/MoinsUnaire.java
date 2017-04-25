@@ -46,5 +46,8 @@ public class MoinsUnaire extends Unaire {
 		
 		return sb.toString();
 	}
+
+	public void ajoutVar() {
+	}
 	
 }

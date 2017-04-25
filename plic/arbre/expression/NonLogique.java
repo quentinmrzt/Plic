@@ -47,4 +47,7 @@ public class NonLogique extends Unaire {
 		return sb.toString();
 	}
 
+	public void ajoutVar() {
+	}
+
 }

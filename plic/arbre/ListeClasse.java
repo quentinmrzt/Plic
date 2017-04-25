@@ -1,6 +1,7 @@
 package plic.arbre;
 
 import java.util.ArrayList;
+import plic.exceptions.ClasseRacineInexistanteException;
 
 public class ListeClasse extends ArbreAbstrait {
 	protected ArrayList<Classe> lc;
@@ -13,19 +14,47 @@ public class ListeClasse extends ArbreAbstrait {
 	public void ajouter(Classe c){
 		lc.add(c);
 	}
+	
+	public ArrayList<Classe> getListeClasse() {
+		return lc;
+	}
+
+	public void ajoutVar() {
+		for (Classe c : lc){
+			if (c.getIdf().equals(this.classeRacine)){			
+				c.ajoutVar();
+			}
+		}
+		for (Classe c : lc){
+			if(!c.getVarAdd()){
+				c.ajoutVar();
+			}
+		}
+	}
 
 	@Override
 	public void verifier() {
-		for(Classe c : lc){
+		boolean existeClasseRacine = false;
+		for (Classe c : lc){
+			if (c.getIdf().equals(this.classeRacine)){
+				existeClasseRacine = true;
+			}
 			c.verifier();
+		}	
+		if (!existeClasseRacine){
+			throw new ClasseRacineInexistanteException(noLigne, "La classe racine passee en argument est inexistante");
 		}
 	}
 
 	@Override
 	public String toMIPS() {
-		// TODO Auto-generated method stub
-		return null;
+		StringBuilder sb = new StringBuilder();
+		for (Classe c : lc){
+			if (c.getIdf().equals(this.classeRacine)){
+				sb.append(c.toMIPS());
+			}
+		}
+		return sb.toString();
 	}
-	
 
 }

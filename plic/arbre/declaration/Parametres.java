@@ -19,6 +19,10 @@ public class Parametres extends ArbreAbstrait {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public void ajoutVar() {
+	}
 	
 
 }

@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import plic.TDS.TDS;
 import plic.analyse.AnalyseurLexical;
 import plic.analyse.AnalyseurSyntaxique;
 import plic.arbre.ArbreAbstrait;
@@ -20,12 +21,16 @@ import plic.exceptions.AnalyseException;
 
 public class Plic {
     
-    public Plic(String fichier) {
+    public Plic(String fichier, String classeRacine) {
         try {
             AnalyseurSyntaxique analyseur = new AnalyseurSyntaxique(new AnalyseurLexical(new FileReader(fichier)));
             ArbreAbstrait arbre = (ArbreAbstrait) analyseur.parse().value;
             
-            arbre.verifier();            
+            arbre.setClasseRacine(classeRacine);
+            arbre.ajoutVar();
+            
+            TDS.getInstance().setAnalyseSem(true);
+            arbre.verifier();
             //System.err.println("expression stockée dans l'arbre : " + arbre + "\n");
             
             String mips = arbre.toMIPS();
@@ -56,12 +61,12 @@ public class Plic {
 	}
 
     public static void main(String[] args) {
-        if (args.length != 1) {
+        if (args.length != 2) {
             System.err.println("Nombre incorrect d'arguments") ;
-            System.err.println("\tjava -jar plic.jar <fichierSource.plic>") ;
+            System.err.println("\tjava -jar plic.jar <fichierSource.plic> <classe racine>") ;
             System.exit(1) ;
         }
-        new Plic(args[0]) ;
+        new Plic(args[0], args[1]) ;
     }
     
 }

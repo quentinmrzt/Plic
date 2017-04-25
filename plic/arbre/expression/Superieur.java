@@ -42,5 +42,8 @@ public class Superieur extends Comparaison {
 		
 		return sb.toString();
 	}
+
+	public void ajoutVar() {
+	}
     
 }

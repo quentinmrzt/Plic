@@ -1,39 +1,60 @@
 package plic.TDS;
 
-import java.util.HashMap;
-import plic.exceptions.DoubleDeclException;
-import plic.exceptions.IdfNonTrouveException;
+import java.util.*;
+import plic.arbre.*;
 
 public class TDS {
-	private static TDS instance = new TDS();
-	private int dep = 0;
-	private HashMap<Entree, Symbole> tds = new HashMap<Entree, Symbole>();
+	private final static TDS instance = new TDS();
+	private static int dicoCourant = 0, noBloc = 0;
+	private static boolean analyseSem = false;
+	private static HashMap<Integer, DicoLocal> listeDico = new HashMap<Integer, DicoLocal>();
+	private static ListeClasse listeClasse = null;
 	
 	private TDS(){
 	}
 	
 	public static TDS getInstance(){
-		return instance;		
+		return instance;
 	}
 	
 	public void ajouter(Entree e, Symbole s, int noligne){
-		if(!tds.containsKey(e)){
-			tds.put(e, s);
-			dep-=4;
-		}else{
-			throw new DoubleDeclException(noligne, "La variable \"" + e.getIdf() + "\" est declaree plusieurs fois");
-		}
+		listeDico.get(dicoCourant).ajouter(e, s, noligne);
 	}
 	
-	public Symbole identifier(Entree e, int ligne){
-		if(tds.containsKey(e)){
-			return tds.get(e);
-		}else{
-			throw new IdfNonTrouveException(ligne, "variable \"" + e.getIdf() + "\" non declaree");
-		}
+	public void entreeBloc(){
+		noBloc++;
+		listeDico.put(noBloc, new DicoLocal(dicoCourant, noBloc));
 	}
 	
-	public int getTailleZoneVariable(){
-		return dep;
+	public DicoLocal sortieBloc(){
+		return listeDico.get(dicoCourant);
+	}
+	
+	public DicoLocal getDico(int n){
+		return listeDico.get(n);
+	}
+	
+	public void setDicoCourant(int n){
+		dicoCourant = n;
+	}
+	
+	public int getDicoCourant(){
+		return dicoCourant;
+	}
+	
+	public int getNoBloc(){
+		return noBloc;
+	}
+	
+	public void setListeClasse(ListeClasse lc){
+		listeClasse = lc;
+	}
+	
+	public Iterable<Classe> getListeClasse(){
+		return listeClasse.getListeClasse();
+	}
+
+	public void setAnalyseSem(boolean b) {
+		analyseSem = b;
 	}
 }

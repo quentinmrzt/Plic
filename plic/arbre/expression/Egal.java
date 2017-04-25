@@ -31,5 +31,8 @@ public class Egal extends Comparaison {
 		
 		return sb.toString();
 	}
+
+	public void ajoutVar() {
+	}
     
 }

@@ -36,5 +36,8 @@ public class EtLogique extends BinaireLogique {
 		
 		return sb.toString();
 	}
+
+	public void ajoutVar() {
+	}
 	
 }

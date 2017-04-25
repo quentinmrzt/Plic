@@ -35,17 +35,20 @@ parser code {:
         lesTerminaux.put(new Integer(CodesLexicaux.OU), "ou") ;
         lesTerminaux.put(new Integer(CodesLexicaux.POINTVIRGULE), ";") ;
         lesTerminaux.put(new Integer(CodesLexicaux.VIRGULE), ",") ;
+        lesTerminaux.put(new Integer(CodesLexicaux.POINT), ".") ;
         lesTerminaux.put(new Integer(CodesLexicaux.PUBLIQUE), "publique") ;
         lesTerminaux.put(new Integer(CodesLexicaux.PRIVEE), "privee") ;
         lesTerminaux.put(new Integer(CodesLexicaux.ENTIER), "entier") ;
         lesTerminaux.put(new Integer(CodesLexicaux.CLASS), "classe") ;
         lesTerminaux.put(new Integer(CodesLexicaux.DEBUT), "debut") ;
         lesTerminaux.put(new Integer(CodesLexicaux.FIN), "fin") ;
+        lesTerminaux.put(new Integer(CodesLexicaux.NOUVEAU), "nouveau");
         lesTerminaux.put(new Integer(CodesLexicaux.ECR), "ecrire") ;
         lesTerminaux.put(new Integer(CodesLexicaux.SI), "si") ;
         lesTerminaux.put(new Integer(CodesLexicaux.ALORS), "alors") ;
         lesTerminaux.put(new Integer(CodesLexicaux.SINON), "sinon") ;
         lesTerminaux.put(new Integer(CodesLexicaux.FSI), "fsi") ;
+        lesTerminaux.put(new Integer(CodesLexicaux.ENTIER), "entier") ;
 
         StringBuffer m = new StringBuffer() ;
 
@@ -83,16 +86,17 @@ parser code {:
    
 /* Terminals (tokens returned by the scanner).  */
 
-terminal Symbol    PLUS, MOINS, MULT, DIV, PAROUV, PARFER, POINTVIRGULE , VIRGULE ;
+terminal Symbol    PLUS, MOINS, MULT, DIV, PAROUV, PARFER, POINTVIRGULE , VIRGULE , POINT ;
 terminal Symbol    SUP, INF, EGAL, EGALEGAL, DIFF, ET, OU, NON ;
 terminal String    IDF, CONSTANTEINT, CONSTANTEBOOL, PUBLIQUE, PRIVEE, ENTIER , CLASS , DEBUT , FIN ;
-terminal String    ECR, CONSTANTECHAINE, SI, ALORS, SINON, FSI ;
+terminal String    NOUVEAU, ECR, CONSTANTECHAINE, SI, ALORS, SINON, FSI ;
    
 /* Non terminals used in the grammar section.  */
 
 non terminal ArbreAbstrait PROG ;
 non terminal Expression EXPR, CSTE ;
-non terminal Declaration DECLARATION, DECL_CHAMP, DECL_CONST , DECL_VAR ;
+non terminal Declaration DECLARATION, DECL_CHAMP, DECL_CONST ;
+non terminal DeclarationVar DECL_VAR ;
 non terminal String TYPE, STATUT ;
 non terminal ListeDeclaration LDECLARATION ;
 non terminal ListeClasse LCLASSE ;
@@ -104,7 +108,9 @@ non terminal Affectation AFFECT ;
 non terminal Acces ACCES ;
 non terminal Ecrire ECRIRE ;
 non terminal Condition CONDITION ;
+non terminal Instanciation INSTANCIATION ;
 non terminal Parametres PARAMETRES ;
+non terminal String TYPE_RES ; 
 
 precedence left INF, SUP ;
 precedence left EGALEGAL, DIFF;
@@ -121,12 +127,22 @@ start with PROG ;
 PROG    ::=		LCLASSE:lc
 				{: BlocDInstructions arbre = new BlocDInstructions(lcleft+1) ;
                    arbre.ajouter(lc) ;
+                   TDS.getInstance().setListeClasse(lc);
                    RESULT = arbre ; :}
                 ;
 
 LCLASSE	::=     LCLASSE:lc CLASSE:c
-				{: lc.ajouter(c);
-					RESULT = lc ; :}     
+				{: boolean existeDeja = false;
+					for(Classe classe : lc.getListeClasse()){
+						if(classe.getIdf().equals(c.getIdf())){
+							existeDeja = true;
+						}
+					}
+					if(existeDeja){
+						throw new DoubleDeclException(cleft+1, "La classe \"" + c.getIdf() + "\" est declaree plusieurs fois");
+					}
+					lc.ajouter(c);
+					RESULT = lc ; :}
 		|		CLASSE:c
 				{: ListeClasse lc = new ListeClasse(cleft+1);
 					lc.ajouter(c) ;
@@ -134,10 +150,14 @@ LCLASSE	::=     LCLASSE:lc CLASSE:c
                 ;
                 
 CLASSE	::=		CLASS IDF:i LDECLARATION:ld FIN
-				{: Classe c = new Classe(ileft+1, new Identificateur(ileft+1, i), ld);
+				{: 	TDS.getInstance().entreeBloc();
+					TDS.getInstance().setDicoCourant(TDS.getInstance().getNoBloc());
+					Classe c = new Classe(ileft+1, new Identificateur(ileft+1, i), ld);
 					RESULT = c ; :}
 		|		CLASS IDF:i FIN
-				{: Classe c = new Classe(ileft+1, new Identificateur(ileft+1, i));
+				{: TDS.getInstance().entreeBloc();
+					TDS.getInstance().setDicoCourant(TDS.getInstance().getNoBloc());
+					Classe c = new Classe(ileft+1, new Identificateur(ileft+1, i));
 					RESULT = c ; :}
 				;
 				
@@ -157,10 +177,7 @@ DECLARATION ::=	DECL_CHAMP:d
 				;
                 
 DECL_CHAMP	::=	STATUT:s TYPE:t LIDF:li POINTVIRGULE
-				{: for(Identificateur i : li.iterable()){
-						TDS.getInstance().ajouter(new Entree(i.getNom()), new Symbole(TDS.getInstance().getTailleZoneVariable(), t, s), tleft+1); 
-					}
-				   RESULT = new DeclarationChamp(lileft+1, li); :}
+				{: RESULT = new DeclarationChamp(lileft+1, li, t, s, 0); :}
 				; 
 					
 LIDF	::=		LIDF:li VIRGULE IDF:i
@@ -180,22 +197,27 @@ STATUT	::= 	PUBLIQUE:p
 				
 TYPE	::= 	ENTIER:e
                 {: RESULT = e ; :}
+        |		IDF:i
+        		{: RESULT = i; :}
 				;
 				
-DECL_CONST	::= STATUT:s IDF:i PARAMETRES:p DEBUT DECL_VAR LINST:li FIN
-				{: RESULT = new DeclarationConst(ileft+1, new Identificateur(ileft+1, i), li) ; :}
+DECL_CONST	::= STATUT:s IDF:i PAROUV PARAMETRES:p PARFER DEBUT LINST:li FIN
+				{: RESULT = new DeclarationConst(ileft+1, new Identificateur(ileft+1, i), li, 0) ; :}
+		|		STATUT:s IDF:i DEBUT FIN
+				{: RESULT = new DeclarationConst(ileft+1, new Identificateur(ileft+1, i), null, 0) ; :}
 				;
 				
-DECL_VAR	::=	TYPE:t LIDF:li POINTVIRGULE
-				{: for(Identificateur i : li.iterable()){
-						TDS.getInstance().ajouter(new Entree(i.getNom()), new Symbole(TDS.getInstance().getTailleZoneVariable(), t), tleft+1); 
-					}
-				   RESULT = new DeclarationVar(lileft+1, li); :}
+PARAMETRES	::=	PAROUV TYPE_RES IDF:i PARFER
+				{: RESULT = new Parametres(ileft+1) ; :}
 				;
 			
-PARAMETRES	::=	PAROUV:p PARFER
-				{: RESULT = new Parametres(pleft+1) ; :}
-			;
+TYPE_RES 	::= ENTIER
+		|		IDF
+		;
+				
+DECL_VAR	::=	TYPE:t LIDF:li POINTVIRGULE
+				{: RESULT = new DeclarationVar(lileft+1, li, t, 0); :}
+				;
 				
 LINST		::= LINST:li INSTRUCTION:i
 				{: li.ajouter(i);
@@ -211,39 +233,53 @@ INSTRUCTION ::= AFFECT:a
 		|		ECRIRE:e
 				{: RESULT = e ; :}
 		|		CONDITION:c
-				{: RESULT = c ; :}
+				{: RESULT = c ; :}	
+		|		DECL_VAR:d
+				{: RESULT = d ; :}	
+		| 		INSTANCIATION:i
+				{: RESULT = i ; :}
 				;
 				
 AFFECT		::= ACCES:a EGAL EXPR:e POINTVIRGULE
-				{: Affectation af = new Affectation(eleft+1, a, e);
+				{: Affectation af = new Affectation(eleft+1, a, e, 0);
 					RESULT = af ; :}
 			; 
+			
+INSTANCIATION ::= ACCES:a EGAL NOUVEAU IDF:i PAROUV PARFER POINTVIRGULE	
+					{: Identificateur idf = new Identificateur(ileft+1,i);
+					RESULT = new Instanciation(aleft+1, a, idf, 0); :}
+			;
 
 ACCES		::=	IDF:i
 				{: Identificateur idf = new Identificateur(ileft+1, i);
-				Acces ac = new Acces(ileft+1, idf);
-				RESULT = ac ; :}
+					Acces ac = new Acces(ileft+1, idf, null);
+					RESULT = ac ; :}	
+		|		IDF:i POINT IDF:j
+				{:Identificateur idf = new Identificateur(ileft+1, i);
+					Identificateur idfBis = new Identificateur(jleft+1, j);
+					Acces a = new Acces(ileft+1, idf, idfBis);
+					RESULT = a ; :}	
 			;
 			
 CONDITION	::=	SI EXPR:e ALORS LINST:l FSI
-				{: Condition c = new Condition(eleft+1, e, l, null) ; 
+				{: Condition c = new Condition(eleft+1, e, l, null, 0) ; 
 					RESULT = c ; :}
 		| 		SI EXPR:e ALORS LINST:l1 SINON LINST:l2 FSI
-				{: Condition c = new Condition(eleft+1, e, l1, l2) ;  
+				{: Condition c = new Condition(eleft+1, e, l1, l2, 0) ;  
 					RESULT = c ; :}
 		|		SI EXPR:e ALORS FSI
-				{: Condition c = new Condition(eleft+1, e, null, null) ;  
+				{: Condition c = new Condition(eleft+1, e, null, null, 0) ;  
 					RESULT = c ; :}
 		|		SI EXPR:e ALORS SINON LINST:l FSI
-				{: Condition c = new Condition(eleft+1, e, null, l) ;  
+				{: Condition c = new Condition(eleft+1, e, null, l, 0) ;  
 					RESULT = c ; :}
 			;
 
 ECRIRE		::= ECR EXPR:exp POINTVIRGULE
-				{: Ecrire e = new Ecrire(expleft+1, exp);
+				{: Ecrire e = new Ecrire(expleft+1, exp, 0);
 					RESULT = e ; :}
 		|		ECR CONSTANTECHAINE:c POINTVIRGULE
-				{: Ecrire e = new Ecrire(cleft+1, c);
+				{: Ecrire e = new Ecrire(cleft+1, c, 0);
 					RESULT = e ; :}
 			;
 
